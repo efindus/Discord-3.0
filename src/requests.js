@@ -2,13 +2,22 @@ const { randomBytes, createHash, createHmac } = require("crypto");
 const { createReadStream, existsSync, lstatSync } = require("fs");
 const { createCaptcha, verifyCaptcha } = require("./captcha.js");
 
-var Database = require("./database.js");
-var database = new Database("./data/database.json");
+const { Http2ServerResponse } = require("http2");
+const { Database } = require("./database.js");
 
+var database = new Database("./data/database.json");
 var contentTypes = require("./json/contentTypes.json");
 
+/**
+ * Handles an http request
+ * @param {string} method 
+ * @param {string} path 
+ * @param {object} cookies 
+ * @param {string} data 
+ * @param {Http2ServerResponse} response 
+ */
 
-module.exports.request = (method, path, cookies, data, response) =>
+var request = (method, path, cookies, data, response) =>
 {
     var user;
 
@@ -21,8 +30,6 @@ module.exports.request = (method, path, cookies, data, response) =>
             user = cookie.username;
         }
     }
-
-    // Main page
 
     if(path === "/")
     {
@@ -40,9 +47,6 @@ module.exports.request = (method, path, cookies, data, response) =>
         return;
     }
 
-
-    // Log in
-
     if(path == "/login")
     {
         if(user === undefined)
@@ -59,8 +63,6 @@ module.exports.request = (method, path, cookies, data, response) =>
         return;
     }
 
-    // Register
-
     if(path === "/register")
     {
         if(user === undefined)
@@ -76,8 +78,6 @@ module.exports.request = (method, path, cookies, data, response) =>
 
         return;
     }
-
-    // APIs
 
     if(method === "POST" && path === "/api/login")
     {
@@ -125,11 +125,11 @@ module.exports.request = (method, path, cookies, data, response) =>
 
         return;
     }
-    else if(method === "POST" && path === "/api/register")
+
+    if(method === "POST" && path === "/api/register")
     {
         var errors = [];
         data = JSON.parse(data);
-        console.log(data);
 
         if(typeof data.username !== "string" || data.username.length < 3 || data.username.length > 24)
         {
@@ -203,7 +203,8 @@ module.exports.request = (method, path, cookies, data, response) =>
 
         return;
     }
-    else if(method === "POST" && path === "/api/captcha")
+
+    if(method === "POST" && path === "/api/captcha")
     {
         var result = createCaptcha(8, database.data.secret);
 
@@ -214,8 +215,6 @@ module.exports.request = (method, path, cookies, data, response) =>
         return;
     }
     
-    // Static files
-
     if(path.startsWith("../") || path.startsWith("/html/") || !existsSync(`./static${path}`) || !lstatSync(`./static${path}`).isFile())
     {
         response.writeHead(404, { "Content-Type": "text/html" });
@@ -225,4 +224,6 @@ module.exports.request = (method, path, cookies, data, response) =>
 
     response.writeHead(200, { "Content-Type": contentTypes[path.slice(path.lastIndexOf(".") + 1)] || "text/plain" });
     createReadStream(`./static${path}`).pipe(response);
-}
+};
+
+module.exports = { request };

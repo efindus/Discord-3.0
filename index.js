@@ -4,6 +4,7 @@ const { writeFileSync, existsSync, mkdirSync, readFileSync } = require("fs");
 if(!existsSync("./data"))
 {
     mkdirSync("./data");
+    mkdirSync("./data/errors");
     writeFileSync("./data/database.json", `{"secret":"${randomBytes(8).toString("hex")}","users":{}}`);
 }
 
@@ -18,5 +19,5 @@ server.on("request", request);
 process.on("uncaughtException", error =>
 {
     console.log(`${bold(red(`Error: ${error.stack}`))}`);
-    writeFileSync(`logs/error-${randomBytes(4).toString("hex")}.txt`, error.stack);
+    writeFileSync(`./data/errors/error-${randomBytes(4).toString("hex")}.txt`, error.stack);
 });

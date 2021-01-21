@@ -22,6 +22,11 @@ var displayBytes = (bytes) =>
 
 class Server extends EventEmitter
 {
+    /**
+     * Launches new HTTP server.
+     * @param {string} key Server key.
+     * @param {string} cert Server cert.
+     */
     constructor(key, cert)
     {
         super();
@@ -36,11 +41,6 @@ class Server extends EventEmitter
             key: key,
             cert: cert,
             allowHTTP1: true
-        });
-
-        server.on("upgrade", () =>
-        {
-            console.log("up!");
         });
 
         server.on("request", (request, response) =>

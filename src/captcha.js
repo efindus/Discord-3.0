@@ -4,6 +4,16 @@ const letters = Object.keys(font);
 
 var solved = new Set();
 
+/**
+ * Verifies if captcha was solved correctly.
+ * @param {string} id - Unique captcha id.
+ * @param {string} timestamp - Captcha creation timestamp.
+ * @param {string} solution - Solution to test.
+ * @param {string} signature - Captcha signature.
+ * @param {string} secret - Secret that was used to sign the captcha.
+ * @returns {string|boolean} Returns true if captcha was solved correctly. Else the error message is provided.
+ */
+
 var verifyCaptcha = (id, timestamp, solution, signature, secret) =>
 {
     if(createHmac("sha256", secret).update(`${id}${timestamp}${solution}`).digest("hex") !== signature)
@@ -31,17 +41,32 @@ var verifyCaptcha = (id, timestamp, solution, signature, secret) =>
     return true;
 };
 
+/**
+ * Captcha data
+ * @typedef {object} CaptchaData
+ * @property {string} id - Unique captcha id.
+ * @property {number} timestamp - Captcha creation timestamp.
+ * @property {string} signature - Captcha signature.
+ * @property {string} content - Captcha content.
+ */
+
+/**
+ * Creates a new captcha.
+ * @param {number} length - The length of the captcha.
+ * @param {string} secret - Secret key used to sign a captcha.
+ * @returns {CaptchaData} Captcha data 
+ */
+
 var createCaptcha = (length, secret) =>
 {
-    let text = "";
+    let solution = "";
     let position = -10;
-
-    var output = [];
+    let output = [];
 
     while(length--)
     {
-        var letter = letters[Math.floor(Math.random() * letters.length)];
-        text += letter;
+        let letter = letters[Math.floor(Math.random() * letters.length)];
+        solution += letter;
 
         let angle = Math.random() * 0.6 - 0.3;
         let sinus = Math.sin(angle);
@@ -51,7 +76,7 @@ var createCaptcha = (length, secret) =>
 
         for(const path of font[letter])
         {
-            for(var index = 0; index < path.length; index++)
+            for(let index = 0; index < path.length; index++)
             {
                 if(typeof path[index] === "number")
                 {
@@ -65,18 +90,18 @@ var createCaptcha = (length, secret) =>
             }
         }
 
-        var middle = position + (max - min) / 2;
+        let middle = position + (max - min) / 2;
 
         for(const path of font[letter])
         {
-            var current = "";
+            let current = "";
 
-            for(var index = 0; index < path.length; index++)
+            for(let index = 0; index < path.length; index++)
             {
                 if(typeof path[index] === "number")
                 {
-                    var x = path[index] + position - min + 10 - middle;
-                    var y = path[index + 1] - 32;
+                    let x = path[index] + position - min + 10 - middle;
+                    let y = path[index + 1] - 32;
     
                     current += ` ${Math.round((x * cosinus - y * sinus + middle) * 10) / 10} ${Math.round((x * sinus + y * cosinus + 32) * 10) / 10}`;
                     index++;
@@ -93,23 +118,24 @@ var createCaptcha = (length, secret) =>
         position += max - min + 10;
     }
     
-    for(var index = output.length - 1; index > 0; index--)
+    for(let index = output.length - 1; index > 0; index--)
     {
-        var index2 = Math.floor(Math.random() * (index + 1));
-        var value = output[index];
-        output[index] = output[index2];
-        output[index2] = value;
+        let newIndex = Math.floor(Math.random() * (index + 1));
+        let value = output[index];
+
+        output[index] = output[newIndex];
+        output[newIndex] = value;
     }
 
-    var result = {
-        id: randomBytes(4).toString("hex"),
-        timestamp: Date.now(),
+    let id = randomBytes(4).toString("hex");
+    let timestamp = Date.now();
+
+    return {
+        id: id,
+        timestamp: timestamp,
+        signature: createHmac("sha256", secret).update(`${id}${timestamp}${solution}`).digest("hex"),
         content: `<svg class="captcha-image" version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${Math.ceil(position)} 64"><path fill="var(--text)" d="${output.join("")}"></path></svg>`
     };
-
-    result.signature = createHmac("sha256", secret).update(`${result.id}${result.timestamp}${text}`).digest("hex");
-
-    return result;
 }
 
 module.exports = { createCaptcha, verifyCaptcha };

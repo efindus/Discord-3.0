@@ -11,4 +11,4 @@ Object.entries(colors).forEach(([key, value]) =>
     {
         return `${value}${string}\x1b[0m`;
     };
-})
+});
