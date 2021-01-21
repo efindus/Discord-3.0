@@ -1,7 +1,8 @@
 document.getElementById("form").onsubmit = function(event)
 {
     event.preventDefault();
-    
+
+    document.getElementById("password").value = "";
     document.getElementById("form-body").style.opacity = "0";
     document.getElementById("form-loader").style.display = "block";
     document.getElementById("form-error").style.display = "none";

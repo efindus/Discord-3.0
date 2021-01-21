@@ -4,6 +4,9 @@ document.getElementById("form").onsubmit = function(event)
 {
     event.preventDefault();
     
+    document.getElementById("password-1").value = "";
+    document.getElementById("password-2").value = "";
+    document.getElementById("code").value = "";
     document.getElementById("form-body").style.opacity = "0";
     document.getElementById("form-loader").style.display = "block";
     document.getElementById("form-error").style.display = "none";
