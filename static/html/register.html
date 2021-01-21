@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <title>change_name</title>
+        <meta charset="utf-8">
+        <link href="./css/style.css" rel="Stylesheet">
+        <script src="./js/theme.js"></script>
+
+    </head>
+
+    <body>
+
+        <div class="form-container">
+
+            <form class="form" id="form">
+
+                <div id="form-body">
+    
+                    <div class="form-error" id="form-error">Unknown error occurred. Please try again later.</div>
+                    <div class="form-header">Create an account</div>
+                    <div class="form-label" id="form-label-username">Username</div>
+                    <div class="form-error" id="form-error-username"></div>
+                    <input class="form-input" id="username">
+                    <div class="form-label" id="form-label-password">Password</div>
+                    <div class="form-error" id="form-error-password"></div>
+                    <input class="form-input" type="password" id="password-1">
+                    <div class="form-label">Repeat password</div>
+                    <input class="form-input" type="password" id="password-2">
+                    <div class="form-error" id="form-error-captcha"></div>
+
+                    <div class="form-captcha" id="captcha">
+                        
+                        <div class="form-captcha-checkbox"></div>
+                        <div class="form-captcha-text">I'm not a robot</div>
+
+                    </div>
+
+                    <div class="form-captcha-loader" id="captcha-loader">
+
+                        <div class="loader">
+
+                            <div class="loader-content"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-captcha-input" id="captcha-input">
+                        
+                        <div class="form-label">Rewrite the text from the picture</div>
+                        <div id="form-captcha-content"></div>
+                        <input class="form-input" type="text" id="code" autocomplete="off">
+
+                    </div>
+
+                    <div class="form-buttons">
+        
+                        <a class="form-buttons-left" href="/login">Log in</a>
+                        <div class="form-buttons-space"></div>
+                        <input type="submit" class="form-buttons-right" value="Create an account &rarr;">
+        
+                    </div>
+    
+                </div>
+    
+                <div class="loader" id="form-loader" style="display: none;">
+                    
+                    <div class="loader-content"></div>
+
+                </div>
+    
+            </form>
+            
+        </div>
+        
+
+        <script src="./js/register.js"></script>
+
+    </body>
+
+</html>
