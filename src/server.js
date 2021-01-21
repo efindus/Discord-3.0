@@ -27,6 +27,7 @@ class Server extends EventEmitter
      * @param {string} key Server key.
      * @param {string} cert Server cert.
      */
+
     constructor(key, cert)
     {
         super();
@@ -37,7 +38,7 @@ class Server extends EventEmitter
             response.end();
         }).listen(80);
 
-        var server = createSecureServer({
+        let server = createSecureServer({
             key: key,
             cert: cert,
             allowHTTP1: true

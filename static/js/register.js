@@ -3,10 +3,7 @@ var captcha = {};
 document.getElementById("form").onsubmit = function(event)
 {
     event.preventDefault();
-    
-    document.getElementById("password-1").value = "";
-    document.getElementById("password-2").value = "";
-    document.getElementById("code").value = "";
+
     document.getElementById("form-body").style.opacity = "0";
     document.getElementById("form-loader").style.display = "block";
     document.getElementById("form-error").style.display = "none";
@@ -27,6 +24,10 @@ document.getElementById("form").onsubmit = function(event)
         captchaSignature: captcha.signature,
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toUTCString()
     });
+        
+    document.getElementById("password-1").value = "";
+    document.getElementById("password-2").value = "";
+    document.getElementById("code").value = "";
     
     var request = new XMLHttpRequest();
     request.open("POST", "/api/register");

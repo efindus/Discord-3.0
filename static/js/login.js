@@ -2,7 +2,6 @@ document.getElementById("form").onsubmit = function(event)
 {
     event.preventDefault();
 
-    document.getElementById("password").value = "";
     document.getElementById("form-body").style.opacity = "0";
     document.getElementById("form-loader").style.display = "block";
     document.getElementById("form-error").style.display = "none";
@@ -15,6 +14,8 @@ document.getElementById("form").onsubmit = function(event)
         remember: document.getElementById("remember").checked,
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toUTCString()
     });
+    
+    document.getElementById("password").value = "";
     
     var request = new XMLHttpRequest();
     request.open("POST", "/api/login");
