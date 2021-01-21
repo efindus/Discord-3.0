@@ -29,6 +29,11 @@ class Server extends EventEmitter
             allowHTTP1: true
         });
 
+        server.on("upgrade", (request, socket) =>
+        {
+            
+        });
+
         server.on("request", (request, response) =>
         {
             let start = process.hrtime.bigint();
@@ -78,4 +83,4 @@ class Server extends EventEmitter
     }
 };
 
-module.exports = Server;
+module.exports = { Server };
