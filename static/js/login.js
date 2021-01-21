@@ -8,15 +8,6 @@ document.getElementById("form").onsubmit = function(event)
     document.getElementById("form-error-username").style.display = "none";
     document.getElementById("form-error-password").style.display = "none";
 
-    var data = JSON.stringify({
-        username: document.getElementById("username").value,
-        password: document.getElementById("password").value,
-        remember: document.getElementById("remember").checked,
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toUTCString()
-    });
-    
-    document.getElementById("password").value = "";
-    
     var request = new XMLHttpRequest();
     request.open("POST", "/api/login");
 
@@ -47,5 +38,12 @@ document.getElementById("form").onsubmit = function(event)
     request.onerror = error;
     request.ontimeout = error;
 
-    request.send(data);
+    request.send(JSON.stringify({
+        username: document.getElementById("username").value,
+        password: document.getElementById("password").value,
+        remember: document.getElementById("remember").checked,
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toUTCString()
+    }));
+
+    document.getElementById("password").value = "";
 }

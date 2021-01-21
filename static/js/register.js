@@ -14,21 +14,6 @@ document.getElementById("form").onsubmit = function(event)
     document.getElementById("form-error-captcha").style.display = "none";
     document.getElementById("captcha-input").style.display = "none";
 
-    var data = JSON.stringify({
-        username: document.getElementById("username").value,
-        password1: document.getElementById("password-1").value,
-        password2: document.getElementById("password-2").value,
-        captchaId: captcha.id,
-        captchaTimestamp: captcha.timestamp,
-        captchaSolution: document.getElementById("code").value,
-        captchaSignature: captcha.signature,
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toUTCString()
-    });
-        
-    document.getElementById("password-1").value = "";
-    document.getElementById("password-2").value = "";
-    document.getElementById("code").value = "";
-    
     var request = new XMLHttpRequest();
     request.open("POST", "/api/register");
 
@@ -69,7 +54,20 @@ document.getElementById("form").onsubmit = function(event)
     request.onerror = error;
     request.ontimeout = error;
 
-    request.send(data);
+    request.send(JSON.stringify({
+        username: document.getElementById("username").value,
+        password1: document.getElementById("password-1").value,
+        password2: document.getElementById("password-2").value,
+        captchaId: captcha.id,
+        captchaTimestamp: captcha.timestamp,
+        captchaSolution: document.getElementById("code").value,
+        captchaSignature: captcha.signature,
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toUTCString()
+    }));
+
+    document.getElementById("password-1").value = "";
+    document.getElementById("password-2").value = "";
+    document.getElementById("code").value = "";
 };
 
 document.getElementById("captcha").addEventListener("click", function()
@@ -109,5 +107,4 @@ document.getElementById("captcha").addEventListener("click", function()
     request.ontimeout = error;
 
     request.send();
-
 });

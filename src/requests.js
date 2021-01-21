@@ -20,7 +20,7 @@ var contentTypes = require("./json/contentTypes.json");
 var request = (method, path, cookies, data, response) =>
 {
     var user;
-    
+
     if(cookies.session !== undefined && createHmac("sha256", database.data.secret).update(cookies.session).digest("hex") === cookies.signature)
     {
         var cookie = JSON.parse(cookies.session);

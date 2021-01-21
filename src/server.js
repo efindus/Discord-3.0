@@ -62,31 +62,17 @@ class Server extends EventEmitter
 
                 var url = request.url;
 
-                if(request.method.length + url.length > 25)
+                if(request.method.length + url.length > 30)
                 {
-                    url = `${url.slice(0, 22 - request.method.length)}...`;
+                    url = `${url.slice(0, 27 - request.method.length)}...`;
                 }
 
-                while(request.method.length + url.length < 25)
+                while(request.method.length + url.length < 30)
                 {
                     url += " ";
                 }
 
-                var userAgent = request.headers["user-agent"] || "unknown";
-
-                if(userAgent.length > 90)
-                {
-                    userAgent = `${userAgent.slice(0, 87)}...`;
-                }
-                console.log(
-                    `${bold(green(request.method))} ${bold(blue(url))} ` +
-                    `${bold(green("Status:"))} ${bold(blue(`${response.statusCode} ${STATUS_CODES[response.statusCode]}`))} `+
-                    `${bold(green("Time:"))} ${bold(blue(`${Math.round(Number(end - start) / 1000) / 1000} ms`))} ` +
-                    `${bold(green("Received:"))} ${bold(blue(displayBytes(request.socket.bytesRead - request.socket.bytesReceived)))} ` +
-                    `${bold(green("Sent:"))} ${bold(blue(displayBytes(request.socket.bytesWritten - request.socket.bytesSent)))} ` +
-                    `${bold(green("IP:"))} ${bold(blue(ip))} ` +
-                    `${bold(green("User-Agent:"))} ${bold(blue(userAgent))}`
-                );
+                console.log(`${bold(green(request.method))} ${bold(blue(url))} ${bold(green(`(${Math.round(Number(end - start) / 1000) / 1000} ms)`))}`);
 
                 request.socket.bytesSent = request.socket.bytesWritten;
                 request.socket.bytesReceived = request.socket.bytesRead; 
