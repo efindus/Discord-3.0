@@ -1,6 +1,7 @@
 const EventEmitter = require("events");
 const { URL } = require("url");
 const { createServer, STATUS_CODES } = require("http");
+const { parse } = require("querystring");
 const { createSecureServer } = require("http2");
 const { green, blue, bold } = require("./colors.js");
 
@@ -94,27 +95,6 @@ class Server extends EventEmitter
             var path = new URL(request.url, `https://${request.headers.host}`).pathname;
             path = path.endsWith("/") && path !== "/" ? path.slice(0, -1) : path;
 
-            // TODO: use builtin nodejs funcitons
-            
-            var cookies = {};
-
-            if(request.headers.cookie !== undefined)
-            {
-                request.headers.cookie.split("; ").forEach(cookie =>
-                {
-                    var index = cookie.indexOf("=");
-
-                    if(index !== -1)
-                    {
-                        cookies[cookie.slice(0, index)] = cookie.slice(index + 1);
-                    }
-                    else
-                    {
-                        cookies[cookie] = "";
-                    }
-                });
-            }
-
             var data = "";
 
             request.on("data", (buffer) =>
@@ -124,7 +104,7 @@ class Server extends EventEmitter
 
             request.on("end", () =>
             {
-                this.emit("request", request.method, path, cookies, data, response);
+                this.emit("request", request.method, path, parse(request.headers.cookie || "", "; ", "="), data, response);
             });
         });
 
